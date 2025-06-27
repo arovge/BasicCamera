@@ -1,19 +1,5 @@
 import SwiftUI
 
-public extension View {
-    /// Presents a `fullScreenCover` that presents the basic camera view.
-    /// - Parameters:
-    ///   - isPresented: A binding to a Boolean value that determines whether
-    ///     to present the basic camera view.
-    func basicCameraView(isPresented: Binding<Bool>) -> some View {
-        fullScreenCover(isPresented: isPresented) {
-            NavigationView {
-                CameraView()
-            }
-        }
-    }
-}
-
 class CameraModel: ObservableObject {
     enum Source {
         case front
@@ -33,6 +19,7 @@ class CameraModel: ObservableObject {
 struct CameraView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var model = CameraModel()
+    let options: BasicCameraOptions
     
     var body: some View {
         VStack(spacing: 0) {
