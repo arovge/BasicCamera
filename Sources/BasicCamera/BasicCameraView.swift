@@ -8,7 +8,7 @@ public extension View {
     ///   - options: Configurable options for the BasicCamera. By default this uses `BasicCameraOptions.default`.
     func basicCameraView(
         isPresented: Binding<Bool>,
-        options: BasicCameraOptions = .default
+        options: BasicCameraOptions = BasicCameraOptions()
     ) -> some View {
         fullScreenCover(isPresented: isPresented) {
             NavigationView {
@@ -20,9 +20,17 @@ public extension View {
 
 /// A struct defining various options for configuring basic camera.
 public struct BasicCameraOptions {
-    public init() {}
+    let supportsMultipleCaptures: Bool
+    let showPhotoConfirmation: Bool
     
-    public static var `default`: BasicCameraOptions {
-        BasicCameraOptions()
+    /// Creates a new BasicCameraOptions struct. Parameters all have default values allowing for customization.
+    /// - Parameters:
+    ///   - supportsMultipleCaptures: A Boolean argument for allowing the user to take multiple photos within the same camera session.
+    public init(
+        supportsMultipleCaptures: Bool = false,
+        showPhotoConfirmation: Bool = true
+    ) {
+        self.supportsMultipleCaptures = supportsMultipleCaptures
+        self.showPhotoConfirmation = showPhotoConfirmation
     }
 }
