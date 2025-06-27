@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CameraToolbar: View {
     let capture: () -> Void
-    let flipOutput: () -> Void
+    let flipCamera: () -> Void
     let dismiss: () -> Void
 
     var body: some View {
@@ -19,7 +19,7 @@ struct CameraToolbar: View {
                 Spacer()
                 
                 Button {
-                    flipOutput()
+                    flipCamera()
                 } label: {
                     Image(systemName: "arrow.triangle.2.circlepath.camera.fill")
                         .foregroundStyle(.white)
@@ -30,7 +30,7 @@ struct CameraToolbar: View {
             }
         }
         .padding(.horizontal)
-        .padding(.horizontal)
+        .padding([.horizontal, .top])
     }
 }
 
@@ -44,7 +44,7 @@ struct CameraToolbar: View {
         .safeAreaInset(edge: .bottom) {
             CameraToolbar(
                 capture: { print("image captured") },
-                flipOutput: { print("output flipped") },
+                flipCamera: { print("camera flipped") },
                 dismiss: { print("dimissed") }
             )
         }
