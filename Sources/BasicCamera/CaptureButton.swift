@@ -5,7 +5,9 @@ struct CaptureButton: View {
     
     var body: some View {
         Button {
-            capture()
+            withAnimation(.interactiveSpring) {
+                capture()
+            }
         } label: {
             Circle()
                 .fill(.white)

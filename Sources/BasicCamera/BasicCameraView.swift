@@ -12,7 +12,10 @@ public extension View {
     ) -> some View {
         fullScreenCover(isPresented: isPresented) {
             NavigationView {
-                CameraView(options: options)
+                CameraView(
+                    options: options,
+                    dismiss: { isPresented.wrappedValue.toggle() }
+                )
             }
         }
     }

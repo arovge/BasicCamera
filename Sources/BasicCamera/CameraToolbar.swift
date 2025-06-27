@@ -35,18 +35,10 @@ struct CameraToolbar: View {
 }
 
 #Preview {
-    NavigationView {
-        VStack(spacing: 0) {
-            
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.black)
-        .safeAreaInset(edge: .bottom) {
-            CameraToolbar(
-                capture: { print("image captured") },
-                flipCamera: { print("camera flipped") },
-                dismiss: { print("dimissed") }
-            )
-        }
-    }
+    CameraToolbar(
+        capture: { print("image captured") },
+        flipCamera: { print("camera flipped") },
+        dismiss: { print("dismissed") }
+    )
+    .background(.black)
 }
