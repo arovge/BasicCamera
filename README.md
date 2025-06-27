@@ -1,2 +1,3 @@
-# BasicCamera
-A basic camera implementation for SwiftUI
+# swift-basic-camera
+
+A basic camera implementation for SwiftUI.
