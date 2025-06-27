@@ -23,7 +23,7 @@ struct ConfirmationToolbar: View {
             .tint(.white)
         }
         .padding(.horizontal)
-        .padding([.horizontal, .top])
+        .padding(.all)
     }
 }
 

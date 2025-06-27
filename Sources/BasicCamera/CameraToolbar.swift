@@ -30,7 +30,7 @@ struct CameraToolbar: View {
             }
         }
         .padding(.horizontal)
-        .padding([.horizontal, .top])
+        .padding(.all)
     }
 }
 
