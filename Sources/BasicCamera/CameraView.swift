@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 class CameraModel: ObservableObject {
     enum Source {
@@ -13,6 +14,13 @@ class CameraModel: ObservableObject {
     
     @Published var source = Source.back
     @Published var phase = Phase.capture
+    @Published var dismiss = false
+    @Published var takenImages = [UIImage]()
+    private let options: BasicCameraOptions
+    
+    init(options: BasicCameraOptions) {
+        self.options = options
+    }
     
     func flipCamera() {
         source = switch source {
@@ -22,7 +30,17 @@ class CameraModel: ObservableObject {
     }
     
     func capture() {
-        phase = .confirmation
+        if options.showPhotoConfirmation {
+            phase = .confirmation
+            return
+        }
+        
+        // TODO: Save image
+        if canTakeAnotherImage {
+            phase = .capture
+        } else {
+            dismiss = true
+        }
     }
     
     func retake() {
@@ -30,14 +48,34 @@ class CameraModel: ObservableObject {
     }
     
     func confirm() {
-        phase = .capture
+        // TODO: save image
+        
+        if canTakeAnotherImage {
+            phase = .capture
+        } else {
+            dismiss = true
+        }
+    }
+    
+    var canTakeAnotherImage: Bool {
+        options.supportsMultipleCaptures && takenImages.count < options.maxImageCount
     }
 }
 
 struct CameraView: View {
-    @StateObject private var model = CameraModel()
-    let options: BasicCameraOptions
+    @StateObject private var model: CameraModel
     let dismiss: () -> Void
+    let addImages: ([UIImage]) -> Void
+    
+    init(
+        options: BasicCameraOptions,
+        dismiss: @escaping () -> Void,
+        addImages: @escaping ([UIImage]) -> Void
+    ) {
+        self._model = StateObject(wrappedValue: CameraModel(options: options))
+        self.dismiss = dismiss
+        self.addImages = addImages
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -60,6 +98,10 @@ struct CameraView: View {
                 )
             }
         }
+        .onChange(of: model.dismiss) { _ in
+            guard model.dismiss else { return }
+            addImages(model.takenImages)
+        }
     }
 }
 
@@ -77,8 +119,12 @@ struct StubbedViewFinder: View {
 #Preview {
     @Previewable @State var presented = true
     
-    Button("Present") {
-        presented.toggle()
+    Form {
+        Section {
+            Button("Take Picture", systemImage: "camera") {
+                presented.toggle()
+            }
+        }
     }
-    .basicCameraView(isPresented: $presented)
+    .basicCameraView(isPresented: $presented) { _ in }
 }
