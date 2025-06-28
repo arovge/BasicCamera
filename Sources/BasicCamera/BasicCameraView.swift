@@ -1,25 +1,55 @@
 import SwiftUI
 import UIKit
 
+/// Determines how the capture workflow works
+public enum BasicCameraPictureCaptureSetting {
+    /// Only a single picture can be taken
+    case single
+    /// Multiple pictures can be taken until the maximum number of images are taken.
+    case multi(max: Int)
+}
+
+/// Determines the workflow for after the user takes a picture.
+public enum BasicCameraConfirmationSetting {
+    /// There is no confirmation of a taken picture.
+    case none
+    /// The user is given the choice to retake a picture or confirm it.
+    case confirm
+    /// The user is given the choice to retake a picture, edit it by drawing on it, or confirm it without edits.
+    case edit
+}
+
 /// A struct defining various options for configuring camera.
 public struct BasicCameraOptions {
-    let showPhotoConfirmation: Bool
-    let supportsMultipleCaptures: Bool
-    let maxImageCount: Int
+    let confirmation: BasicCameraConfirmationSetting
+    let capture: BasicCameraPictureCaptureSetting
     
     /// Creates a new BasicCameraOptions struct. Parameters all have default values allowing for customization.
     /// - Parameters:
-    ///   - showPhotoConfirmation: Flag that determines if the user should be shown the photo confirmation screen after taking a photo. Defaults to `true`.
-    ///   - supportsMultipleCaptures: Flag that determines if the user can take multiple photos within the same camera session. Defaults to `false`.
-    ///   - maxImageCount: The maximum number of photos the user can take in a single session. Only relevant when `supportsMultipleCaptures` is `true`.
+    ///   - confirmation: Determines what post image capture workflow the user enters into.
+    ///   - capture: Determines if the user is taking one picture or multiple pictures, and the maximum number of pictures that can be taken.
     public init(
-        supportsMultipleCaptures: Bool = false,
-        showPhotoConfirmation: Bool = true,
-        maxImageCount: Int = 10
+        confirmation: BasicCameraConfirmationSetting = .edit,
+        capture: BasicCameraPictureCaptureSetting = .multi(max: 10)
     ) {
-        self.supportsMultipleCaptures = supportsMultipleCaptures
-        self.showPhotoConfirmation = showPhotoConfirmation
-        self.maxImageCount = maxImageCount
+        self.confirmation = confirmation
+        self.capture = capture
+        let a = Int?.none
+    }
+    
+    var showConfirmationPage: Bool {
+        switch confirmation {
+        case .none: false
+        case .confirm: true
+        case .edit: true
+        }
+    }
+    
+    var maxImageCount: Int {
+        switch capture {
+        case .single: 1
+        case .multi(max: let max): max
+        }
     }
 }
 

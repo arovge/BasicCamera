@@ -30,12 +30,13 @@ class CameraModel: ObservableObject {
     }
     
     func capture() {
-        if options.showPhotoConfirmation {
+        if options.showConfirmationPage {
             phase = .confirmation
             return
         }
         
         // TODO: Save image
+        
         if canTakeAnotherImage {
             phase = .capture
         } else {
@@ -58,7 +59,7 @@ class CameraModel: ObservableObject {
     }
     
     var canTakeAnotherImage: Bool {
-        options.supportsMultipleCaptures && takenImages.count < options.maxImageCount
+        takenImages.count < options.maxImageCount
     }
 }
 
@@ -135,9 +136,10 @@ struct StubbedViewFinder: View {
     .basicCameraView(
         isPresented: $presented,
         options: BasicCameraOptions(
-            supportsMultipleCaptures: supportsMultipleCaptures,
-            showPhotoConfirmation: showPhotoConfirmation,
-            maxImageCount: supportsMultipleCaptures ? 3 : 1
+            confirmation: showPhotoConfirmation ? .confirm : .none,
+            capture: supportsMultipleCaptures ? .multi(max: 5) : .single
         )
-    ) { _ in }
+    ) { images in
+        print("\(images.count) images captured")
+    }
 }
