@@ -117,14 +117,27 @@ struct StubbedViewFinder: View {
 
 @available(iOS 17, *)
 #Preview {
+    @Previewable @State var supportsMultipleCaptures = false
+    @Previewable @State var showPhotoConfirmation = true
     @Previewable @State var presented = true
     
     Form {
+        Section("Options") {
+            Toggle("Multiple Selection", isOn: $supportsMultipleCaptures)
+            Toggle("Confirmation", isOn: $showPhotoConfirmation)
+        }
         Section {
             Button("Take Picture", systemImage: "camera") {
                 presented.toggle()
             }
         }
     }
-    .basicCameraView(isPresented: $presented) { _ in }
+    .basicCameraView(
+        isPresented: $presented,
+        options: BasicCameraOptions(
+            supportsMultipleCaptures: supportsMultipleCaptures,
+            showPhotoConfirmation: showPhotoConfirmation,
+            maxImageCount: supportsMultipleCaptures ? 3 : 1
+        )
+    ) { _ in }
 }
